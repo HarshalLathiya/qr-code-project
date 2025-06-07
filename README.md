@@ -18,4 +18,4 @@ This is a simple and functional **QR Code Generator** built using HTML, CSS, and
 
 🌐 Live Demo
 
-👉 [Click here to view it on GitHub Pages](https://harshallathiya.github.io/qr-code-project/bqr.html)
+👉 [Click here to view it on GitHub Pages](https://harshallathiya.github.io/QR-Code-Project/bqr.html)
