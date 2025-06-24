@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        body {
+            flex-direction: column;
+            background: radial-gradient(circle at top left, #1e1e2f, #12121c);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .topbar a {
+            color: #00feca;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            color: white;
+        }
+
+        h2,
+        h3 {
+            text-align: center;
+            background: linear-gradient(to right, #00feca, #5e5eff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ul {
+            padding-left: 1rem;
+        }
+
+        .qr-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            scroll-snap-type: x mandatory;
+            padding: 1rem 0;
+        }
+
+        .qr-card {
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 220px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .qr-card img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+        }
+
+        .qr-card p {
+            font-size: 0.8rem;
+            word-break: break-word;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="glass-container">
+        <h2>Admin Panel</h2>
+
+        <h3>Registered Users</h3>
+        <ul id="userList"></ul>
+
+        <h3>All QR Codes</h3>
+        <div class="qr-list" id="qrList"></div>
+    </div>
+
+    <script>
+        async function loadAdminData() {
+            const res = await fetch('/admin');
+            const data = await res.json();
+
+            const userList = document.getElementById("userList");
+            userList.innerHTML = data.users.map(u => `<li>${u.username}</li>`).join("");
+
+            const qrList = document.getElementById("qrList");
+            qrList.innerHTML = Object.entries(data.qrData).flatMap(([username, qrs]) =>
+                qrs.map((qr, index) => `
+          <div class="qr-card">
+            <img src="${qr.imageUrl}" />
+            <p><strong>${username}</strong></p>
+            <p>QR ${index + 1}</p>
+          </div>
+        `)
+            ).join('');
+        }
+
+        loadAdminData();
+    </script>
+</body>
+
+</html>

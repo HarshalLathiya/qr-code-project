@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        body {
+            flex-direction: column;
+        }
+
+        .topbar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem 2rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .topbar a {
+            font-weight: bold;
+            color: #00feca;
+            margin-left: auto;
+            text-decoration: none;
+        }
+
+        .glass-container {
+            margin-top: 5rem;
+            padding-top: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .header h2 {
+            font-size: 1.6rem;
+            background: linear-gradient(to right, #00feca, #5e5eff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .generate-btn {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .generate-btn a {
+            font-weight: bold;
+            color: #00feca;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .generate-btn a:hover {
+            color: #5e5eff;
+        }
+
+        .scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .qr-gallery {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+        }
+
+        .qr-card {
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 0 8px #00000055;
+            text-align: center;
+            min-width: 220px;
+        }
+
+        .qr-card img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+        }
+
+        .qr-card p {
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="glass-container">
+        <div class="header">
+            <h2>Your Generated QR Codes</h2>
+        </div>
+
+        <div class="generate-btn">
+            <a href="/QR_website.html">+ Generate New</a>
+        </div>
+
+        <div class="scroll-wrapper">
+            <div class="qr-gallery" id="qrList"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchQRCodes() {
+            const res = await fetch('/user/qrs');
+            const data = await res.json();
+
+            const container = document.getElementById('qrList');
+            container.innerHTML = data.map((qr, index) => `
+                <div class="qr-card">
+                  <img src="${qr.imageUrl}" />
+                  <p>QR ${index + 1}</p>
+                </div>
+              `).join('');
+        }
+
+        fetchQRCodes();
+        window.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.querySelector('.qr-gallery');
+            gallery.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    gallery.scrollLeft += e.deltaY;
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Code Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h2>QR Code Generator</h2>
+
+    <input type="text" id="url" placeholder="Enter URL" required />
+    <input type="color" id="color" value="#000000" />
+    <select id="size">
+      <option value="150">Small (150px)</option>
+      <option value="200" selected>Medium (200px)</option>
+      <option value="250">Large (250px)</option>
+    </select>
+
+    <button onclick="generateQR()">Generate</button>
+    <div id="qrDisplay"></div>
+
+    <div class="links">
+      <a href="/dashboard.html">← Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    async function generateQR() {
+      const url = document.getElementById("url").value.trim();
+      const color = document.getElementById("color").value;
+      const size = document.getElementById("size").value;
+
+      if (!url) {
+        alert("Please enter a URL");
+        return;
+      }
+
+      const response = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, color, size })
+      });
+
+      const data = await response.json();
+
+      const qrDisplay = document.getElementById("qrDisplay");
+      qrDisplay.innerHTML = `
+        <img src="${data.imageUrl}" alt="QR Code" />
+        <br />
+        <a href="${data.imageUrl}" download="qr_code.png">Download QR Code</a>
+      `;
+    }
+  </script>
+</body>
+
+</html>
