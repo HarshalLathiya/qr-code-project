@@ -5,15 +5,13 @@ const QRCode = require('qrcode');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Temporary in-memory storage
-const users = []; // { username, passwordHash }
-const qrData = {}; // { username: [ { url, color, size, imageUrl } ] }
+// ✅ Serve static files like HTML, CSS, JS
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 app.use(session({
   secret: 'mysecretkey',
@@ -21,15 +19,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-// Helper middleware
-function isLoggedIn(req, res, next) {
-  if (req.session.username) {
-    return next();
-  }
-  res.redirect('/login.html');
-}
-
-// Routes
+// ✅ Redirect root to login
 app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
