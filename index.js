@@ -7,8 +7,21 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ In-memory data stores
+const users = []; // [{ username, passwordHash }]
+const qrData = {}; // { username: [ { url, color, size, imageUrl } ] }
+
+// ✅ Middleware to check if user is logged in
+function isLoggedIn(req, res, next) {
+  if (req.session && req.session.username) {
+    return next();
+  } else {
+    return res.redirect('/login.html');
+  }
+}
+
 // ✅ Serve static files like HTML, CSS, JS
-app.use(express.static(path.join(__dirname, 'public'))); // <== IMPORTANT
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,6 +37,7 @@ app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
 
+// ✅ Register
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const existingUser = users.find(user => user.username === username);
@@ -38,7 +52,7 @@ app.post('/register', async (req, res) => {
   res.redirect('/login.html');
 });
 
-// Handle Login
+// ✅ Login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = users.find(u => u.username === username);
@@ -49,14 +63,14 @@ app.post('/login', async (req, res) => {
   res.redirect('/dashboard.html');
 });
 
-// Handle Logout
+// ✅ Logout
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login.html');
   });
 });
 
-// Generate QR Code (POST)
+// ✅ Generate QR
 app.post('/generate', isLoggedIn, async (req, res) => {
   const { url, color, size } = req.body;
   const username = req.session.username;
@@ -81,13 +95,13 @@ app.post('/generate', isLoggedIn, async (req, res) => {
   }
 });
 
-// Serve QR history for dashboard
+// ✅ Get all QRs for logged-in user
 app.get('/user/qrs', isLoggedIn, (req, res) => {
   const username = req.session.username;
   res.json(qrData[username] || []);
 });
 
-// Admin panel (hardcoded user)
+// ✅ Admin route
 app.get('/admin', isLoggedIn, (req, res) => {
   if (req.session.username !== 'admin') {
     return res.send('Unauthorized.');
@@ -99,6 +113,7 @@ app.get('/admin', isLoggedIn, (req, res) => {
   });
 });
 
+// ✅ Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
