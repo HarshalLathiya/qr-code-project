@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ✅ Serve static files like HTML, CSS, JS
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // <== IMPORTANT
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
