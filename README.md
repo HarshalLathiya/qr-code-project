@@ -1,21 +1,38 @@
-🔲 QR Code Project
+QR Code Generator & Dashboard Web App 🎯
 
-This is a simple and functional **QR Code Generator** built using HTML, CSS, and JavaScript. The project allows users to enter any text, URL, or data and instantly generate a scannable QR code.
+A full-stack mini project built with ❤️ using Node.js, Express, HTML, CSS, and JavaScript.
+This stylish, responsive QR code generator allows users to:
 
-🚀 Features
+🔐 Register & login with secure sessions
 
-* ✅ Real-time QR Code generation
-* 📄 Supports URLs, text, and other data formats
-* 💡 Simple, clean user interface
-* 📱 Responsive design for mobile and desktop
-* ⚡ No external backend required – fully client-side
+🎨 Generate custom QR codes with color & size options
 
-🔧 Technologies Used
+📂 View all generated QRs in a beautiful scrollable dashboard
 
-* HTML5
-* CSS3
-* JavaScript (with [QR Code API](https://goqr.me/api/) or `qrcode.js` if used)
+🛡 Admin Panel to view all users and QR data (username admin)
 
-🌐 Live Demo
+✨ Styled with glassmorphism UI and made mobile-friendly
 
-👉 [Click here to view it on GitHub Pages](https://harshallathiya.github.io/QR_Code_Project_/bqr.html)
+⚙️ Tech Stack
+Frontend	Backend	Hosting
+HTML5, CSS3, JavaScript	Node.js + Express.js	🟢 Render
+QRCode.js library	express-session, bcryptjs	GitHub-integrated deployment
+
+🔥 Features
+✅ User authentication (register/login)
+
+✅ QR code generation with live preview
+
+✅ Dashboard with scrollable horizontal QR slider 🖼️
+
+✅ Admin panel access (just use username admin)
+
+✅ Memory-based user data (no database required)
+
+✅ Responsive design with gradient-glass style
+
+🚀 Live Demo
+🌐 Hosted on Render:
+https://qr-code-project-0iyu.onrender.com
+(if it's not working, check that public/ is pushed & deployed! 😉)
+
