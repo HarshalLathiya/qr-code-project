@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-  secret: 'mysecretkey',
+  secret: process.env.SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
 }));
