@@ -1,1 +1,22 @@
-{"type":"commonjs","dependencies":{"bcryptjs":"^3.0.2","express":"^5.1.0","express-session":"^1.18.1","inquirer":"^12.6.1","qr-image":"^3.2.0","qrcode":"^1.5.4"},"name":"qr-code-project","version":"1.0.0","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"keywords":[],"author":"","license":"ISC","description":"🔲 QR Code Project"}
+{
+  "type": "commonjs",
+  "name": "qr-code-project",
+  "version": "1.0.0",
+  "description": "🔲 QR Code Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "inquirer": "^12.6.1",
+    "qr-image": "^3.2.0",
+    "qrcode": "^1.5.4"
+  }
+}
