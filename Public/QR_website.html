@@ -4,11 +4,121 @@
 <head>
   <meta charset="UTF-8" />
   <title>QR Code Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #1e1e2f, #12121c);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    h2 {
+      background: linear-gradient(to right, #00feca, #5e5eff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="text"],
+    input[type="color"],
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #00feca;
+      box-shadow: 0 0 8px #00feca88;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #00feca, #5e5eff);
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+      margin-bottom: 1rem;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00feca99;
+    }
+
+    #qrDisplay img {
+      margin-top: 1rem;
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+    }
+
+    #qrDisplay a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      color: #00feca;
+      font-weight: bold;
+    }
+
+    .links {
+      margin-top: 1rem;
+    }
+
+    .links a {
+      color: #00feca;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      color: #5e5eff;
+    }
+
+    @media (max-width: 480px) {
+      .glass-container {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="glass-container">
     <h2>QR Code Generator</h2>
 
     <input type="text" id="url" placeholder="Enter URL" required />
@@ -20,6 +130,7 @@
     </select>
 
     <button onclick="generateQR()">Generate</button>
+
     <div id="qrDisplay"></div>
 
     <div class="links">

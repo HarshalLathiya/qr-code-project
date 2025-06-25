@@ -5,121 +5,223 @@
     <meta charset="UTF-8" />
     <title>Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            flex-direction: column;
-            background: radial-gradient(circle at top left, #1e1e2f, #12121c);
-            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 2rem;
-        }
-
-        .topbar {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #fff;
             display: flex;
-            justify-content: flex-end;
-            width: 100%;
-            margin-bottom: 1rem;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
         }
 
-        .topbar a {
-            color: #00feca;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .glass-container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            color: white;
-        }
-
-        h2,
-        h3 {
-            text-align: center;
+        h2 {
+            margin-top: 0;
+            font-size: 2rem;
             background: linear-gradient(to right, #00feca, #5e5eff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        ul {
-            padding-left: 1rem;
+        .glass-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 900px;
         }
 
-        .qr-list {
-            display: flex;
-            overflow-x: auto;
-            gap: 1rem;
-            scroll-snap-type: x mandatory;
-            padding: 1rem 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
         }
 
-        .qr-card {
-            flex: 0 0 auto;
-            scroll-snap-align: center;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 1rem;
-            border-radius: 12px;
+        th,
+        td {
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            min-width: 220px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
         }
 
-        .qr-card img {
-            width: 180px;
-            height: 180px;
+        th {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
             border-radius: 10px;
         }
 
-        .qr-card p {
-            font-size: 0.8rem;
-            word-break: break-word;
-            margin-top: 0.5rem;
+        button {
+            background: linear-gradient(90deg, #00feca, #5e5eff);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #00b8a9;
+            color: #fff;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #00feca;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .download-section button {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 600px) {
+
+            table th,
+            table td {
+                font-size: 0.75rem;
+            }
+
+            img {
+                width: 70px;
+                height: 70px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="topbar">
-        <a href="/logout">Logout</a>
+    <a class="logout-btn" href="/logout">Logout</a>
+
+    <div class="glass-box">
+        <h2>All Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+        </table>
     </div>
 
-    <div class="glass-container">
-        <h2>Admin Panel</h2>
+    <div class="glass-box">
+        <h2>All QR Logs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>QR Image</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="qrTable"></tbody>
+        </table>
+    </div>
 
-        <h3>Registered Users</h3>
-        <ul id="userList"></ul>
-
-        <h3>All QR Codes</h3>
-        <div class="qr-list" id="qrList"></div>
+    <div class="download-section">
+        <button onclick="downloadLogs()">📥 Download Logs (JSON)</button>
     </div>
 
     <script>
+        let qrDataGlobal = {};
+
         async function loadAdminData() {
-            const res = await fetch('/admin');
+            const res = await fetch("/admin");
             const data = await res.json();
+            qrDataGlobal = data.qrData;
 
-            const userList = document.getElementById("userList");
-            userList.innerHTML = data.users.map(u => `<li>${u.username}</li>`).join("");
+            // Users table
+            const userTable = document.getElementById("userTable");
+            userTable.innerHTML = data.users.map(user => `
+        <tr>
+          <td>${user.username}</td>
+          <td>
+            ${user.username !== 'admin'
+                    ? `<button onclick="deleteUser('${user.username}')">Delete User</button>`
+                    : '<i>Protected</i>'}
+          </td>
+        </tr>
+      `).join('');
 
-            const qrList = document.getElementById("qrList");
-            qrList.innerHTML = Object.entries(data.qrData).flatMap(([username, qrs]) =>
-                qrs.map((qr, index) => `
-          <div class="qr-card">
-            <img src="${qr.imageUrl}" />
-            <p><strong>${username}</strong></p>
-            <p>QR ${index + 1}</p>
-          </div>
-        `)
-            ).join('');
+            // QR Logs table
+            const qrTable = document.getElementById("qrTable");
+            qrTable.innerHTML = '';
+
+            Object.entries(data.qrData).forEach(([username, qrs]) => {
+                qrs.forEach((qr, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+            <td>${username}</td>
+            <td><img src="${qr.imageUrl}" /></td>
+            <td>${qr.color}</td>
+            <td>${qr.size}px</td>
+            <td><button onclick="deleteQR('${username}', ${index})">Delete</button></td>
+          `;
+                    qrTable.appendChild(row);
+                });
+            });
+        }
+
+        async function deleteUser(username) {
+            if (!confirm(`Are you sure you want to delete "${username}"?`)) return;
+            await fetch("/admin/delete-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username })
+            });
+            loadAdminData();
+        }
+
+        async function deleteQR(username, index) {
+            await fetch("/admin/delete-qr", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, index })
+            });
+            loadAdminData();
+        }
+
+        async function downloadLogs() {
+            const res = await fetch('/admin/download-logs');
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "qr-logs.json";
+            link.click();
+            URL.revokeObjectURL(url);
         }
 
         loadAdminData();

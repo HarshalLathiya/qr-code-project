@@ -8,10 +8,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ✅ In-memory data stores
-const users = []; // [{ username, passwordHash }]
-const qrData = {}; // { username: [ { url, color, size, imageUrl } ] }
+const users = [];
+const qrData = {};
 
-// ✅ Middleware to check if user is logged in
+// ✅ Middleware: check if user is logged in
 function isLoggedIn(req, res, next) {
   if (req.session && req.session.username) {
     return next();
@@ -20,9 +20,8 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-// ✅ Serve static files like HTML, CSS, JS
+// ✅ Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,14 +51,21 @@ app.post('/register', async (req, res) => {
   res.redirect('/login.html');
 });
 
-// ✅ Login
+// ✅ Login (admin vs user redirect)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = users.find(u => u.username === username);
+
   if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
     return res.send('Invalid credentials. <a href="/login.html">Try again</a>');
   }
+
   req.session.username = username;
+
+  if (username === 'admin') {
+    return res.redirect('/admin.html');
+  }
+
   res.redirect('/dashboard.html');
 });
 
@@ -95,22 +101,66 @@ app.post('/generate', isLoggedIn, async (req, res) => {
   }
 });
 
-// ✅ Get all QRs for logged-in user
+// ✅ Get QR history (block admin here)
 app.get('/user/qrs', isLoggedIn, (req, res) => {
   const username = req.session.username;
+
+  if (username === 'admin') {
+    return res.status(403).send("Admin does not have personal QR history.");
+  }
+
   res.json(qrData[username] || []);
 });
 
-// ✅ Admin route
+// ✅ Admin panel data
 app.get('/admin', isLoggedIn, (req, res) => {
   if (req.session.username !== 'admin') {
-    return res.send('Unauthorized.');
+    return res.status(403).send('Unauthorized.');
   }
 
-  res.json({
+  res.json({ users, qrData });
+});
+
+// ✅ Delete a QR (admin only)
+app.post('/admin/delete-qr', isLoggedIn, (req, res) => {
+  if (req.session.username !== 'admin') return res.status(403).send('Unauthorized');
+
+  const { username, index } = req.body;
+
+  if (qrData[username] && qrData[username][index]) {
+    qrData[username].splice(index, 1);
+    return res.json({ success: true });
+  }
+
+  return res.json({ success: false });
+});
+
+// ✅ Delete a user (except admin)
+app.post('/admin/delete-user', isLoggedIn, (req, res) => {
+  if (req.session.username !== 'admin') return res.status(403).send('Unauthorized');
+
+  const { username } = req.body;
+  if (username === 'admin') return res.status(403).send('Cannot delete admin');
+
+  const index = users.findIndex(u => u.username === username);
+  if (index !== -1) users.splice(index, 1);
+  delete qrData[username];
+
+  return res.json({ success: true });
+});
+
+// ✅ Download all logs (admin)
+app.get('/admin/download-logs', isLoggedIn, (req, res) => {
+  if (req.session.username !== 'admin') return res.status(403).send('Unauthorized');
+
+  const exportData = {
     users,
     qrData
-  });
+  };
+
+  res.setHeader('Content-Disposition', 'attachment; filename="qr-logs.json"');
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(exportData, null, 2));
 });
 
 // ✅ Start server
